@@ -8,7 +8,6 @@ import { db } from "../firebase";
 const Chats = () => {
   const [chats, setChats] = useState([]);
   const [status, setStatus] = useState(window.innerWidth);
-
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
 

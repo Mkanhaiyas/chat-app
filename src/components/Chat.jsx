@@ -1,13 +1,10 @@
-import React, { useContext, useState } from "react";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import TranslateIcon from "@mui/icons-material/Translate";
 import { useNavigate } from "react-router-dom";
-// import Cam from "../img/cam.png";
-// import Add from "../img/add.png";
-// import More from "../img/more.png";
 import Messages from "./Messages";
 import Input from "./Input";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { ChatContext } from "../context/ChatContext";
 import { AuthContext } from "../context/AuthContext";
@@ -15,29 +12,47 @@ import { AuthContext } from "../context/AuthContext";
 const Chat = () => {
   const { data } = useContext(ChatContext);
   const [lang, setLang] = useState("en");
-  const { currentUser } = useContext(AuthContext);
+  const [toggle, setToggle] = useState(false);
+  const currentUser = useRef(useContext(AuthContext));
+  const Lang = currentUser.current.currentUser.uid;
   const navigate = useNavigate();
 
   const handleBackward = () => {
     navigate("/");
   };
 
-  const handleChange = async () => {
+  useEffect(() => {
+    const updateLanguage = async () => {
+      try {
+        const docData = await getDoc(doc(db, "users", Lang));
+        if (docData.exists()) {
+          if (docData.data().language === "en") setLang("English");
+          else if (docData.data().language === "hi") setLang("Hindi");
+          else if (docData.data().language === "mr") setLang("Marathi");
+          else setLang("Chinese");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    updateLanguage();
+  }, [Lang]);
+
+  const handleLanguage = async (data) => {
     try {
-      await updateDoc(doc(db, "users", currentUser.uid), { language: lang });
+      setToggle(false);
+      const getdata = data;
+      await updateDoc(doc(db, "users", Lang), { language: getdata });
       alert("Set Successfully");
-      // const colRef = collection(db, "users");
-      // const snapshots = await getDocs(colRef);
-      // const docs = snapshots.docs.map((doc) => doc.data());
-      // console.log(docs);
-      // getDoc(doc(db, "users", "HWgTzRiQfuXAkpkJyXJyMbG9fl72")).then(
-      //   (docData) => {
-      //     if (docData.exists()) {
-      //       console.log(docData.data());
-      //     }
-      //   }
-      // );
-      //console.log(Info.data());
+      await getDoc(doc(db, "users", Lang)).then((docData) => {
+        if (docData.exists()) {
+          if (docData.data().language === "en") setLang("English");
+          else if (docData.data().language === "hi") setLang("Hindi");
+          else if (docData.data().language === "mr") setLang("Marathi");
+          else setLang("Chinese");
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -53,19 +68,50 @@ const Chat = () => {
           <span>{data.user?.displayName}</span>
         </div>
         <div className="chatIcons">
-          {/* <img src={Cam} alt="" />
-          <img src={Add} alt="" />
-          <img src={More} alt="" /> */}
-          <select name="Language" onChange={(e) => setLang(e.target.value)}>
-            <option value="hi">Hindi</option>
-            <option value="en">English</option>
-            <option value="zh-Hans">Chinese</option>
-          </select>
-          <button onClick={handleChange}>
-            <CheckCircleIcon />
-          </button>
+          <span>{lang}</span>
+          <div className="set_language">
+            <TranslateIcon
+              onClick={() => {
+                setToggle(!toggle);
+              }}
+            />
+            <div
+              className="choose_language"
+              style={toggle ? { display: "block" } : { display: "none" }}
+            >
+              <div
+                className="specific-lan"
+                onClick={() => handleLanguage("en")}
+                value="en"
+              >
+                English
+              </div>
+              <div
+                className="specific-lan"
+                onClick={() => handleLanguage("hi")}
+                value="hi"
+              >
+                Hindi
+              </div>
+              <div
+                className="specific-lan"
+                onClick={() => handleLanguage("mr")}
+                value="mr"
+              >
+                Marathi
+              </div>
+              <div
+                className="specific-lan"
+                onClick={() => handleLanguage("zh-Hans")}
+                value="zh-Hans"
+              >
+                Chinese
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       <Messages />
       <Input language={lang} />
     </div>

@@ -260,9 +260,24 @@
       }
 
       .chatIcons {
-        background-color: white;
+        background-color: transparent;
+        align-items: center;
         display: flex;
         gap: 10px;
+        border-radius: 1rem;
+        padding: 0.2rem;
+
+        @keyframes anime {
+          0% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
 
         select {
           background-color: transparent;
@@ -271,9 +286,60 @@
         }
 
         button {
+          width: 6rem;
+          height: 2rem;
           background-color: transparent;
           border: none;
           color: black;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          border-radius: 1rem;
+        }
+
+        button:hover {
+          animation: anime linear;
+        }
+
+        span {
+          background-color: #8da4f1;
+          color: white;
+          border-radius: 0.5rem;
+          padding: 0.5rem;
+        }
+
+        .set_language {
+          background-color: transparent;
+          color: white;
+          border-radius: 50%;
+          padding: 0.3rem;
+          height: 1.5rem;
+          width: 1.5rem;
+
+          .choose_language {
+            position: relative;
+            display: flex;
+            width: 8rem;
+            top: 0.8rem;
+            right: 7rem;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.3rem;
+            color: white;
+            background-color: #202c33;
+
+            .specific-lan {
+              margin: 0.2rem;
+              padding: 0.3rem;
+              border-radius: 0.3rem;
+              background-color: #2a3942;
+              cursor: pointer;
+            }
+            .specific-lan:hover {
+              background-color: #5d5b8d;
+            }
+          }
         }
       }
 
@@ -346,6 +412,7 @@
 
         .text-message {
           background-color: #2a3942;
+          color: white;
           height: 2rem;
           border-radius: 6px;
           padding-left: 0.5rem;
@@ -420,11 +487,53 @@
       object-fit: cover;
     }
   }
-
   .chatIcons {
-    background-color: white;
+    background-color: transparent;
+    align-items: center;
     display: flex;
     gap: 10px;
+    border-radius: 1rem;
+    padding: 0.2rem;
+
+    span {
+      background-color: #8da4f1;
+      color: white;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+    }
+
+    .set_language {
+      background-color: transparent;
+      color: white;
+      border-radius: 50%;
+      padding: 0.3rem;
+      height: 1.5rem;
+      width: 1.5rem;
+
+      .choose_language {
+        position: relative;
+        display: flex;
+        width: 8rem;
+        top: 0.8rem;
+        right: 7rem;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0.3rem;
+        color: white;
+        background-color: #202c33;
+
+        .specific-lan {
+          margin: 0.2rem;
+          padding: 0.3rem;
+          border-radius: 0.3rem;
+          background-color: #2a3942;
+          cursor: pointer;
+        }
+        .specific-lan:hover {
+          background-color: #5d5b8d;
+        }
+      }
+    }
 
     select {
       background-color: transparent;
@@ -510,6 +619,7 @@
 
     .text-message {
       background-color: #2a3942;
+      color: white;
       height: 2rem;
       border-radius: 6px;
       padding-left: 0.5rem;
