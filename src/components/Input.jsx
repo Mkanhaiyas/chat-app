@@ -122,17 +122,44 @@ const Input = () => {
 
     if (text1 !== null && Compare === ChatBot) {
       const chatbot = async () => {
-        const response = await axios.get(
-          `http://localhost:5000/message/${text1}`
-        );
+        // const response = await axios.get(
+        //   `https://chatapp-server-6r7m.onrender.com/message/${text1}`
+        // );
+
+        const options = {
+          method: "POST",
+          url: "https://chatgpt-42.p.rapidapi.com/conversationgpt4-2",
+          headers: {
+            "content-type": "application/json",
+            "X-RapidAPI-Key":
+              "6b7dd7187emsh1f6dee5895e67eap1dcac6jsnfc54539cfb15",
+            "X-RapidAPI-Host": "chatgpt-42.p.rapidapi.com",
+          },
+          data: {
+            messages: [
+              {
+                role: "user",
+                content: text1,
+              },
+            ],
+            system_prompt: "",
+            temperature: 0.9,
+            top_k: 5,
+            top_p: 0.9,
+            max_tokens: 256,
+            web_access: false,
+          },
+        };
+        const response = await axios.request(options);
+        console.log(response.data);
 
         await updateDoc(doc(db, "chats", data.chatId), {
           messages: arrayUnion({
             id: uuid(),
             user1: User[0],
             user2: User[1],
-            text1: response.data,
-            text2: response.data,
+            text1: response.data.result,
+            text2: response.data.result,
             senderId: Compare,
             date: Timestamp.now(),
           }),
